@@ -1,29 +1,27 @@
-// Sepetimizi tutacağımız dizi (array)
 let cart = [];
+let allProducts = []; 
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Sayfa yüklendiğinde eski kayıtlı sepeti kontrol et
     const savedCart = localStorage.getItem('darkpin_cart');
     if (savedCart) {
         cart = JSON.parse(savedCart);
-        updateCartCount(); // Sepet ikonundaki sayıyı güncelle
+        updateCartCount();
     }
-    
     fetchProducts();
+    
+    document.querySelector('.cart-btn').addEventListener('click', openCart);
 });
 
-// JSON dosyasından verileri çeken fonksiyon
 async function fetchProducts() {
     try {
         const response = await fetch('products.json');
-        const products = await response.json();
-        displayProducts(products);
+        allProducts = await response.json(); 
+        displayProducts(allProducts);
     } catch (error) {
-        console.error("Ürünler yüklenirken hata oluştu:", error);
+        console.error("Hata:", error);
     }
 }
 
-// Ürünleri ekrana yazdıran fonksiyon
 function displayProducts(products) {
     const productList = document.getElementById('product-list');
     productList.innerHTML = ''; 
@@ -51,22 +49,62 @@ function displayProducts(products) {
     });
 }
 
-// Sepete Ekle Butonu Çalıştığında Olacaklar
 function addToCart(productId) {
-    // Ürün ID'sini sepete ekle
     cart.push(productId);
-    
-    // Sepeti tarayıcının hafızasına kaydet (kullanıcı sayfayı yenilese bile silinmez)
     localStorage.setItem('darkpin_cart', JSON.stringify(cart));
-    
-    // Sağ üstteki sepet sayısını güncelle
     updateCartCount();
 }
 
-// Sağ üstteki kırmızı sepet sayacını güncelleyen fonksiyon
 function updateCartCount() {
     const cartCountElement = document.querySelector('.cart-count');
     if(cartCountElement) {
         cartCountElement.textContent = cart.length;
     }
+}
+
+// --- GÜNCELLENMİŞ SEPET MODAL FONKSİYONLARI ---
+function openCart() {
+    const modal = document.getElementById('cart-modal');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalPriceElement = document.getElementById('total-price');
+    
+    modal.classList.remove('hidden'); 
+    cartItemsContainer.innerHTML = ''; 
+    
+    let total = 0;
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p style="text-align:center; color:#888;">Sepetiniz şu an boş.</p>';
+    } else {
+        cart.forEach((cartId, index) => {
+            const product = allProducts.find(p => p.id === cartId);
+            if (product) {
+                total += product.price;
+                // Her ürünün yanına silme butonu eklendi
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <span>${product.name}</span>
+                        <div>
+                            <span style="color:#00e5ff; font-weight:bold; margin-right:15px;">${product.price} ${product.currency}</span>
+                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ff0055; font-size:16px; cursor:pointer; font-weight:bold;">X</button>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+    totalPriceElement.textContent = total.toFixed(2); 
+}
+
+function closeCart() {
+    const modal = document.getElementById('cart-modal');
+    modal.classList.add('hidden'); 
+}
+
+// YENİ FONKSİYON: Sepetten Ürün Silme
+function removeFromCart(index) {
+    cart.splice(index, 1); // Ürünü diziden çıkar
+    localStorage.setItem('darkpin_cart', JSON.stringify(cart)); // Hafızayı güncelle
+    updateCartCount(); // Sağ üstteki sayıyı güncelle
+    openCart(); // Sepet ekranını anında yenile
 }
