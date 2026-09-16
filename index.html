@@ -22,11 +22,22 @@
             <div class="user-wallet">
                 💳 Bakiye: <span id="balance-amount">1500.00</span> TL
             </div>
+            <!-- YENİ: Siparişlerim Butonu -->
+            <button class="orders-btn" onclick="openOrders()">📦 Siparişlerim</button>
+            
             <button class="cart-btn">
                 Sepetim <span class="cart-count">0</span>
             </button>
         </div>
     </header>
+
+    <!-- YENİ: Büyük Kampanya Vitrini -->
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h1>DARKPİN'de Efsane Sezon Başladı!</h1>
+            <p>En popüler oyunların e-pinleri anında teslimat, şifrelenmiş kodlar ve %100 güvenle sizlerle.</p>
+        </div>
+    </div>
 
     <main class="container">
         <h2 class="section-title">Popüler Ürünler</h2>
@@ -41,7 +52,6 @@
                 <button class="filter-btn" onclick="filterProducts('Steam', this)">Steam</button>
             </div>
             
-            <!-- YENİ: Sıralama Filtresi -->
             <select id="sort-options" class="sort-select" onchange="sortProducts(this.value)">
                 <option value="default">Sıralama Seç</option>
                 <option value="asc">En Ucuz</option>
@@ -52,13 +62,13 @@
         <div id="product-list" class="grid-layout"></div>
     </main>
 
+    <!-- Sepet Modal -->
     <div id="cart-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="closeCart()">&times;</span>
             <h2>Sepetim</h2>
             <div id="cart-items"></div>
             
-            <!-- YENİ: Kupon Alanı -->
             <div class="promo-box">
                 <input type="text" id="promo-input" placeholder="Kupon (Örn: DARK10)">
                 <button onclick="applyPromo()">Uygula</button>
@@ -68,6 +78,15 @@
                 <h3>Toplam: <span id="total-price">0</span> TL</h3>
                 <button class="checkout-btn" onclick="checkout()">Satın Al</button>
             </div>
+        </div>
+    </div>
+
+    <!-- YENİ: Sipariş Geçmişi Modal -->
+    <div id="orders-modal" class="modal hidden">
+        <div class="modal-content orders-modal-content">
+            <span class="close-btn" onclick="closeOrders()">&times;</span>
+            <h2>Sipariş Geçmişim ve E-Pinlerim</h2>
+            <div id="orders-list"></div>
         </div>
     </div>
 
