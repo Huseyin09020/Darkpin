@@ -18,7 +18,10 @@
             <button onclick="triggerSearch()">Ara</button>
         </div>
         
-        <div class="cart-menu">
+        <div class="user-actions">
+            <div class="user-wallet">
+                💳 Bakiye: <span id="balance-amount">1500.00</span> TL
+            </div>
             <button class="cart-btn">
                 Sepetim <span class="cart-count">0</span>
             </button>
@@ -28,36 +31,47 @@
     <main class="container">
         <h2 class="section-title">Popüler Ürünler</h2>
         
-        <div class="category-filters">
-            <button class="filter-btn active" onclick="filterProducts('All', this)">Tümü</button>
-            <button class="filter-btn" onclick="filterProducts('Valorant', this)">Valorant</button>
-            <button class="filter-btn" onclick="filterProducts('Counter-Strike 2', this)">CS2</button>
-            <button class="filter-btn" onclick="filterProducts('PUBG', this)">PUBG</button>
-            <button class="filter-btn" onclick="filterProducts('eFootball', this)">eFootball</button>
-            <button class="filter-btn" onclick="filterProducts('Steam', this)">Steam</button>
+        <div class="filter-bar">
+            <div class="category-filters">
+                <button class="filter-btn active" onclick="filterProducts('All', this)">Tümü</button>
+                <button class="filter-btn" onclick="filterProducts('Valorant', this)">Valorant</button>
+                <button class="filter-btn" onclick="filterProducts('Counter-Strike 2', this)">CS2</button>
+                <button class="filter-btn" onclick="filterProducts('PUBG', this)">PUBG</button>
+                <button class="filter-btn" onclick="filterProducts('eFootball', this)">eFootball</button>
+                <button class="filter-btn" onclick="filterProducts('Steam', this)">Steam</button>
+            </div>
+            
+            <!-- YENİ: Sıralama Filtresi -->
+            <select id="sort-options" class="sort-select" onchange="sortProducts(this.value)">
+                <option value="default">Sıralama Seç</option>
+                <option value="asc">En Ucuz</option>
+                <option value="desc">En Pahalı</option>
+            </select>
         </div>
 
-        <div id="product-list" class="grid-layout">
-            <!-- Ürünler buraya gelecek -->
-        </div>
+        <div id="product-list" class="grid-layout"></div>
     </main>
 
-    <!-- Sepet Modal -->
     <div id="cart-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="closeCart()">&times;</span>
             <h2>Sepetim</h2>
             <div id="cart-items"></div>
+            
+            <!-- YENİ: Kupon Alanı -->
+            <div class="promo-box">
+                <input type="text" id="promo-input" placeholder="Kupon (Örn: DARK10)">
+                <button onclick="applyPromo()">Uygula</button>
+            </div>
+            
             <div class="cart-total">
                 <h3>Toplam: <span id="total-price">0</span> TL</h3>
-                <button class="checkout-btn">Ödeme Yap</button>
+                <button class="checkout-btn" onclick="checkout()">Satın Al</button>
             </div>
         </div>
     </div>
 
-    <!-- Bildirim (Toast) Konteyneri -->
     <div id="toast-container"></div>
-
     <script src="app.js"></script>
 </body>
 </html>
