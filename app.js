@@ -1,9 +1,11 @@
 let cart = [];
 let allProducts = []; 
-let currentProducts = []; // Ekranda görünen filtrelenmiş ürünler
+let currentProducts = []; 
 let balance = parseFloat(localStorage.getItem('darkpin_balance')) || 1500.00;
+// YENİ: Siparişleri tuttuğumuz dizi
+let orders = JSON.parse(localStorage.getItem('darkpin_orders')) || []; 
 let promoApplied = false;
-let currentTotal = 0; // İndirimli son tutarı hafızada tutmak için
+let currentTotal = 0; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedCart = localStorage.getItem('darkpin_cart');
@@ -63,7 +65,6 @@ function updateBalanceDisplay() {
     document.getElementById('balance-amount').textContent = balance.toFixed(2);
 }
 
-// Arama, Filtreleme ve Sıralama Fonksiyonları
 function searchProducts(keyword) {
     const searchTerm = keyword.toLowerCase();
     currentProducts = allProducts.filter(product => 
@@ -90,14 +91,13 @@ function filterProducts(category, buttonElement) {
 
 function sortProducts(type) {
     if (type === 'asc') {
-        currentProducts.sort((a, b) => a.price - b.price); // Ucuzdan Pahalıya
+        currentProducts.sort((a, b) => a.price - b.price); 
     } else if (type === 'desc') {
-        currentProducts.sort((a, b) => b.price - a.price); // Pahalıdan Ucuza
+        currentProducts.sort((a, b) => b.price - a.price); 
     }
     displayProducts(currentProducts);
 }
 
-// Sepet ve Kupon Fonksiyonları
 function addToCart(productId, productName) {
     cart.push(productId);
     localStorage.setItem('darkpin_cart', JSON.stringify(cart));
@@ -112,16 +112,12 @@ function updateCartCount() {
 
 function applyPromo() {
     const input = document.getElementById('promo-input').value.trim().toUpperCase();
-    if (cart.length === 0) {
-        showToast("Önce sepete ürün ekleyin!"); return;
-    }
-    if (promoApplied) {
-        showToast("Zaten bir kupon kullandınız!"); return;
-    }
+    if (cart.length === 0) { showToast("Önce sepete ürün ekleyin!"); return; }
+    if (promoApplied) { showToast("Zaten bir kupon kullandınız!"); return; }
     if (input === 'DARK10') {
         promoApplied = true;
         showToast("Tebrikler! %10 İndirim Uygulandı.");
-        openCart(); // Sepeti yeni fiyatla güncelle
+        openCart(); 
     } else {
         showToast("Geçersiz kupon kodu!");
     }
@@ -156,11 +152,7 @@ function openCart() {
         });
     }
 
-    // İndirim kontrolü
-    if (promoApplied && total > 0) {
-        total = total * 0.90; // %10 İndirim
-    }
-    
+    if (promoApplied && total > 0) { total = total * 0.90; }
     currentTotal = total;
     totalPriceElement.textContent = currentTotal.toFixed(2); 
 }
@@ -172,34 +164,83 @@ function closeCart() {
 function removeFromCart(index) {
     cart.splice(index, 1); 
     localStorage.setItem('darkpin_cart', JSON.stringify(cart)); 
-    if(cart.length === 0) promoApplied = false; // Sepet boşaldıysa kuponu sıfırla
+    if(cart.length === 0) promoApplied = false; 
     updateCartCount(); 
     openCart(); 
 }
 
-// YENİ: Satın Alma Simülasyonu
-function checkout() {
-    if (cart.length === 0) {
-        showToast("Sepetiniz boş!"); return;
+// YENİ: E-Pin Üretici Fonksiyonu
+function generatePin() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let pin = '';
+    for(let i=0; i<12; i++) {
+        if(i > 0 && i % 4 === 0) pin += '-';
+        pin += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return pin;
+}
+
+// GÜNCELLENDİ: Satın Almayı Tamamla ve Siparişe Ekle
+function checkout() {
+    if (cart.length === 0) { showToast("Sepetiniz boş!"); return; }
     
     if (balance >= currentTotal) {
-        // Bakiyeden düş
         balance -= currentTotal;
         localStorage.setItem('darkpin_balance', balance);
         updateBalanceDisplay();
         
-        // Sepeti temizle
+        // Sepetteki her ürünü sipariş geçmişine ekle ve pin üret
+        cart.forEach(cartId => {
+            const product = allProducts.find(p => p.id === cartId);
+            if (product) {
+                orders.push({
+                    name: product.name,
+                    date: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR'),
+                    pin: generatePin()
+                });
+            }
+        });
+        localStorage.setItem('darkpin_orders', JSON.stringify(orders)); // Siparişleri kaydet
+        
         cart = [];
         localStorage.setItem('darkpin_cart', JSON.stringify(cart));
         updateCartCount();
         promoApplied = false;
         
         closeCart();
-        showToast("Satın alma başarılı! Ürünler teslim edildi.");
+        showToast("Tebrikler! Ürünleriniz 'Siparişlerim' kısmına eklendi.");
     } else {
         showToast("Bakiye Yetersiz! Lütfen yükleme yapın.");
     }
+}
+
+// YENİ: Siparişlerim Penceresini Açma
+function openOrders() {
+    const modal = document.getElementById('orders-modal');
+    const ordersList = document.getElementById('orders-list');
+    modal.classList.remove('hidden'); 
+    ordersList.innerHTML = ''; 
+
+    if (orders.length === 0) {
+        ordersList.innerHTML = '<p style="text-align:center; color:#888; font-size:16px;">Henüz hiç alışveriş yapmadınız.</p>';
+    } else {
+        // En yeni sipariş en üstte çıksın diye reverse() yapıyoruz
+        [...orders].reverse().forEach(order => {
+            ordersList.innerHTML += `
+                <div class="order-item">
+                    <div class="order-info">
+                        <h4>${order.name}</h4>
+                        <small style="color:#888;">Tarih: ${order.date}</small>
+                    </div>
+                    <div class="order-pin">${order.pin}</div>
+                </div>
+            `;
+        });
+    }
+}
+
+function closeOrders() {
+    document.getElementById('orders-modal').classList.add('hidden'); 
 }
 
 function showToast(message) {
