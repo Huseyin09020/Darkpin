@@ -14,15 +14,12 @@
         </div>
         
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Hangi oyunu arıyorsun?">
+            <input type="text" id="searchInput" placeholder="Hangi oyunu arıyorsun? (Sürpriz şifreyi dene!)">
             <button onclick="triggerSearch()">Ara</button>
         </div>
         
-        <div class="user-actions">
-            <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()">☀️</button>
-            <div class="user-wallet">💳 Bakiye: <span id="balance-amount">1500.00</span> TL</div>
-            <button class="orders-btn" onclick="openOrders()">📦 Siparişlerim</button>
-            <button class="cart-btn">Sepetim <span class="cart-count">0</span></button>
+        <div class="user-actions" id="auth-section">
+            <!-- Giriş yapılıp yapılmadığına göre JS ile burası değişecek -->
         </div>
     </header>
 
@@ -56,6 +53,19 @@
         <div id="product-list" class="grid-layout"></div>
     </main>
 
+    <!-- Giriş / Kayıt Modal -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content" style="width: 350px; text-align: center;">
+            <span class="close-btn" onclick="closeLogin()">&times;</span>
+            <h2>Giriş Yap</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Alışveriş yapmak için hesabınıza giriş yapın.</p>
+            <div class="admin-form">
+                <input type="text" id="login-username" placeholder="Kullanıcı Adı" required>
+                <button class="checkout-btn" onclick="loginUser()">Sisteme Gir</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Sepet Modal -->
     <div id="cart-modal" class="modal hidden">
         <div class="modal-content">
@@ -82,23 +92,34 @@
         </div>
     </div>
 
-    <!-- YENİ: Ürün Detay Modal -->
+    <!-- Ürün Detay Modal -->
     <div id="detail-modal" class="modal hidden">
         <div class="modal-content detail-modal-content">
             <span class="close-btn" onclick="closeDetail()">&times;</span>
-            <div id="detail-content" class="detail-grid">
-                <!-- İçerik JS ile buraya basılacak -->
-            </div>
+            <div id="detail-content" class="detail-grid"></div>
         </div>
     </div>
 
-    <!-- YENİ: Gizli Admin Panel Modal -->
+    <!-- Şans Çarkı Modal -->
+    <div id="wheel-modal" class="modal hidden">
+        <div class="modal-content" style="text-align:center;">
+            <span class="close-btn" onclick="closeWheel()">&times;</span>
+            <h2 style="color:var(--accent);">🎁 Günlük Şans Çarkı</h2>
+            <p style="margin-bottom:15px; color:var(--text-muted);">Çarkı çevir, indirim kazan!</p>
+            <div class="wheel-container">
+                <div class="wheel-pointer">▼</div>
+                <div class="wheel" id="wheel"></div>
+            </div>
+            <button class="checkout-btn" id="spin-btn" style="margin-top:20px; width:150px;" onclick="spinWheel()">Çevir!</button>
+            <h3 id="wheel-result" style="margin-top:15px; color:var(--success); min-height: 25px;"></h3>
+        </div>
+    </div>
+
+    <!-- Yönetim Paneli Modal -->
     <div id="admin-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="closeAdmin()">&times;</span>
             <h2>⚙️ Yönetim Paneli</h2>
-            <p style="margin-bottom: 15px; color: #888;">Yeni ürün eklemek için formu doldurun.</p>
-            
             <div class="admin-form">
                 <input type="text" id="admin-name" placeholder="Ürün Adı" required>
                 <input type="text" id="admin-cat" placeholder="Kategori (Örn: Valorant)" required>
@@ -110,7 +131,22 @@
                 </select>
                 <button class="checkout-btn" onclick="addNewProduct()">Ürünü Ekle</button>
             </div>
-            <button class="checkout-btn" style="background-color:#ff0055; margin-top:20px;" onclick="resetDatabase()">Veritabanını Sıfırla (İlk Haline Dön)</button>
+            <button class="checkout-btn" style="background-color:var(--danger); margin-top:20px;" onclick="resetDatabase()">Veritabanını Sıfırla</button>
+        </div>
+    </div>
+
+    <!-- Canlı Destek Botu -->
+    <div class="chat-widget">
+        <button class="chat-toggle" onclick="toggleChat()">💬 Destek</button>
+        <div class="chat-box hidden" id="chat-box">
+            <div class="chat-header">Darkpin Asistanı <span onclick="toggleChat()" style="cursor:pointer; float:right;">&times;</span></div>
+            <div class="chat-body" id="chat-body">
+                <div class="bot-msg">Merhaba! Size nasıl yardımcı olabilirim? (Örn: İndirim, Teslimat)</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chat-input" placeholder="Mesajınız..." onkeypress="handleChat(event)">
+                <button onclick="sendChat()">Gönder</button>
+            </div>
         </div>
     </div>
 
