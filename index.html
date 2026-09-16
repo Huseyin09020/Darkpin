@@ -18,9 +18,7 @@
             <button onclick="triggerSearch()">Ara</button>
         </div>
         
-        <div class="user-actions" id="auth-section">
-            <!-- Giriş yapılıp yapılmadığına göre JS ile burası değişecek -->
-        </div>
+        <div class="user-actions" id="auth-section"></div>
     </header>
 
     <div class="hero-banner">
@@ -53,15 +51,17 @@
         <div id="product-list" class="grid-layout"></div>
     </main>
 
-    <!-- Giriş / Kayıt Modal -->
+    <!-- GÜNCELLENDİ: Gerçekçi Giriş / Kayıt Modal -->
     <div id="login-modal" class="modal hidden">
         <div class="modal-content" style="width: 350px; text-align: center;">
             <span class="close-btn" onclick="closeLogin()">&times;</span>
-            <h2>Giriş Yap</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Alışveriş yapmak için hesabınıza giriş yapın.</p>
+            <h2>Hesabınıza Erişin</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px; font-size:14px;">Alışveriş yapmak için giriş yapın veya yeni kayıt oluşturun.</p>
             <div class="admin-form">
                 <input type="text" id="login-username" placeholder="Kullanıcı Adı" required>
-                <button class="checkout-btn" onclick="loginUser()">Sisteme Gir</button>
+                <input type="password" id="login-password" placeholder="Şifre (En az 4 hane)" required>
+                <button class="checkout-btn" onclick="loginUser()">Giriş Yap</button>
+                <button class="checkout-btn" style="background-color: var(--bg-input); color: var(--text-main); margin-top: 10px;" onclick="loginUser()">Yeni Kayıt Oluştur</button>
             </div>
         </div>
     </div>
