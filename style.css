@@ -48,9 +48,45 @@ body {
 .in-stock { color: #00ff88; font-size: 12px; display: block; margin-bottom: 10px; }
 .out-stock { color: #ff0055; font-size: 12px; display: block; margin-bottom: 10px; }
 
-.add-to-cart-btn { width: 100%; padding: 10px; border: none; background-color: #00e5ff; color: #121212; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-.add-to-cart-btn:hover { background-color: #00b8cc; }
-.add-to-cart-btn:disabled { background-color: #555; color: #888; cursor: not-allowed; }
+
+/* --- RGB IŞIKLI BUTON TASARIMI --- */
+.add-to-cart-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #00e5ff;
+    color: #121212;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Üstüne gelince çalışan yanarlı dönerli RGB efekti */
+.add-to-cart-btn:hover:not(:disabled) {
+    background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 400%;
+    color: white;
+    animation: rgbGlow 3s linear infinite;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    transform: scale(1.02);
+}
+
+/* Tükendi butonu için ayar (Işıksız) */
+.add-to-cart-btn:disabled {
+    background-color: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* RGB Animasyonu (Renklerin sağa doğru kayması) */
+@keyframes rgbGlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
 
 /* --- SEPET AÇILIR PENCERE (MODAL) TASARIMI --- */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); display: flex; justify-content: center; align-items: center; z-index: 1000; }
