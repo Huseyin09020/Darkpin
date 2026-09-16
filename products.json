@@ -1,0 +1,52 @@
+[
+  {
+    "id": "val_150",
+    "name": "150 Valorant Points (VP)",
+    "category": "Valorant",
+    "price": 35.00,
+    "currency": "TRY",
+    "image": "assets/images/val-150.jpg",
+    "inStock": true,
+    "discount": 0
+  },
+  {
+    "id": "val_600",
+    "name": "600 Valorant Points (VP)",
+    "category": "Valorant",
+    "price": 130.00,
+    "currency": "TRY",
+    "image": "assets/images/val-600.jpg",
+    "inStock": true,
+    "discount": 5
+  },
+  {
+    "id": "stm_100",
+    "name": "100 TL Steam Cüzdan Kodu",
+    "category": "Steam",
+    "price": 100.00,
+    "currency": "TRY",
+    "image": "assets/images/steam-100.jpg",
+    "inStock": true,
+    "discount": 0
+  },
+  {
+    "id": "gta_mega",
+    "name": "Megalodon Shark Cash Card",
+    "category": "GTA V Online",
+    "price": 500.00,
+    "currency": "TRY",
+    "image": "assets/images/gta-mega.jpg",
+    "inStock": false,
+    "discount": 10
+  },
+  {
+    "id": "efb_100",
+    "name": "100 eFootball Coin",
+    "category": "eFootball",
+    "price": 25.00,
+    "currency": "TRY",
+    "image": "assets/images/efb-100.jpg",
+    "inStock": true,
+    "discount": 0
+  }
+]
