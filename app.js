@@ -124,18 +124,18 @@ function displayProducts(products) {
     });
 }
 
-// 4. ÖZELLİK: GİZLİ OYUN YÖNLENDİRMESİ (EASTER EGG)
+// 4. ÖZELLİK: GİZLİ OYUN YÖNLENDİRMESİ (EASTER EGG - LOST CAMP)
 function searchProducts(keyword) {
     const searchTerm = keyword.trim().toUpperCase();
     
     // GİZLİ ŞİFRE BURADA KONTROL EDİLİYOR
     if(searchTerm === 'DARKGAME') {
         document.getElementById('searchInput').value = ""; // Kutuyu temizle
-        showToast("Gizli portal açılıyor... İyi oyunlar!");
+        showToast("Gizli portal açılıyor... Lost Camp'a Hoş Geldin!");
         
-        // KENDİ OYUNUNUN LİNKİNİ AŞAĞIDAKİ YERE YAPIŞTIR
+        // SENİN OYUNUNUN LİNKİ EKLENDİ
         setTimeout(() => {
-            window.open('https://huseyin09020.github.io/OYUN_PROJENIN_ADI', '_blank'); 
+            window.open('https://huseyin09020.github.io/Lost-Camp/', '_blank'); 
         }, 1500);
         return;
     }
@@ -216,7 +216,6 @@ function applyPromo() {
     if (cart.length === 0) { showToast("Önce sepete ürün ekleyin!"); return; }
     if (promoApplied) { showToast("Zaten kupon kullandınız!"); return; }
     
-    // Şans çarkından kazanılan koda göre indirim!
     if (input === 'DARK10' || input === 'VALO20') { 
         promoApplied = true; showToast("Süper! İndirim Uygulandı."); openCart(); 
     } else { showToast("Geçersiz kupon!"); }
@@ -260,14 +259,13 @@ function spinWheel() {
     const resultText = document.getElementById('wheel-result');
     document.getElementById('spin-btn').disabled = true;
     
-    // Rastgele dönüş açısı (1800 ile 3600 derece arası)
     const randomDegree = Math.floor(Math.random() * 1800) + 1800;
     wheel.style.transform = `rotate(${randomDegree}deg)`;
     
     setTimeout(() => {
         resultText.textContent = "Tebrikler! '%20 İndirim' kazandın. Kod: VALO20";
-        localStorage.setItem('darkpin_spun', 'true'); // Bir daha çıkmasın
-    }, 4000); // 4 saniye dönme süresi
+        localStorage.setItem('darkpin_spun', 'true'); 
+    }, 4000); 
 }
 
 // CANLI DESTEK BOTU MANTIĞI
@@ -282,12 +280,10 @@ function sendChat() {
     if(!text) return;
     
     const body = document.getElementById('chat-body');
-    // Kullanıcı mesajını ekle
     body.innerHTML += `<div class="user-msg">${text}</div>`;
     input.value = "";
-    body.scrollTop = body.scrollHeight; // En alta kaydır
+    body.scrollTop = body.scrollHeight; 
 
-    // Botun düşünme süresi
     setTimeout(() => {
         let reply = "Maalesef bunu anlayamadım. E-pin, indirim veya teslimat hakkında sorabilirsiniz.";
         const lowText = text.toLowerCase();
