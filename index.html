@@ -4,21 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DARKPİN | Güvenli E-Pin Marketiniz</title>
-    <!-- CSS Dosyamızı Bağlıyoruz -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ÜST MENÜ (NAVBAR) -->
     <header class="navbar">
         <div class="logo">
-            <!-- DARK kısmını beyaz, PİN kısmını renkli yapacağız -->
             <h2>DARK<span>PİN</span></h2>
         </div>
         
         <div class="search-bar">
-            <input type="text" placeholder="Hangi oyunu arıyorsun? (Örn: Valorant)">
-            <button>Ara</button>
+            <input type="text" id="searchInput" placeholder="Hangi oyunu arıyorsun?">
+            <button onclick="triggerSearch()">Ara</button>
         </div>
         
         <div class="cart-menu">
@@ -28,16 +25,39 @@
         </div>
     </header>
 
-    <!-- ÜRÜNLERİN LİSTELENECEĞİ ALAN -->
     <main class="container">
         <h2 class="section-title">Popüler Ürünler</h2>
-        <!-- JavaScript ile ürünleri bu div'in içine göndereceğiz -->
+        
+        <div class="category-filters">
+            <button class="filter-btn active" onclick="filterProducts('All', this)">Tümü</button>
+            <button class="filter-btn" onclick="filterProducts('Valorant', this)">Valorant</button>
+            <button class="filter-btn" onclick="filterProducts('Counter-Strike 2', this)">CS2</button>
+            <button class="filter-btn" onclick="filterProducts('PUBG', this)">PUBG</button>
+            <button class="filter-btn" onclick="filterProducts('eFootball', this)">eFootball</button>
+            <button class="filter-btn" onclick="filterProducts('Steam', this)">Steam</button>
+        </div>
+
         <div id="product-list" class="grid-layout">
-            <!-- Şimdilik burası boş, JS ile dolacak -->
+            <!-- Ürünler buraya gelecek -->
         </div>
     </main>
 
-    <!-- JavaScript Dosyamızı Bağlıyoruz -->
+    <!-- Sepet Modal -->
+    <div id="cart-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeCart()">&times;</span>
+            <h2>Sepetim</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                <h3>Toplam: <span id="total-price">0</span> TL</h3>
+                <button class="checkout-btn">Ödeme Yap</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bildirim (Toast) Konteyneri -->
+    <div id="toast-container"></div>
+
     <script src="app.js"></script>
 </body>
 </html>
