@@ -23,20 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('admin-modal').classList.remove('hidden');
     });
 
-    // Siteye ilk kez girene Şans Çarkı açılsın (Sadece giriş yapmışsa ve daha önce çevirmemişse)
+    // Sayfayı yenilediğinde daha önce çark çevirmediyse aç
     if(currentUser && !localStorage.getItem('darkpin_spun')) {
-        setTimeout(() => { document.getElementById('wheel-modal').classList.remove('hidden'); }, 1500);
+        setTimeout(() => { document.getElementById('wheel-modal').classList.remove('hidden'); }, 1000);
     }
 });
 
 // GİRİŞ VE HESAP SİSTEMİ
 function updateAuthUI() {
     const authSection = document.getElementById('auth-section');
-    authSection.innerHTML = ''; // İçeriği temizle
+    authSection.innerHTML = ''; 
 
     if (currentUser) {
-        // Giriş Yapılmışsa
-        // Kayıtlı sepeti ve siparişleri getir
         cart = JSON.parse(localStorage.getItem('darkpin_cart_' + currentUser)) || [];
         orders = JSON.parse(localStorage.getItem('darkpin_orders_' + currentUser)) || [];
         if(!localStorage.getItem('darkpin_balance')) { balance = 1500; localStorage.setItem('darkpin_balance', 1500); }
@@ -49,7 +47,6 @@ function updateAuthUI() {
             <button class="login-btn" style="border-color:var(--danger); color:var(--danger);" onclick="logoutUser()">Çıkış</button>
         `;
     } else {
-        // Giriş Yapılmamışsa
         authSection.innerHTML = `
             <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()">${isLightMode ? '🌙' : '☀️'}</button>
             <button class="login-btn" onclick="openLogin()">Giriş Yap / Kayıt Ol</button>
@@ -59,23 +56,34 @@ function updateAuthUI() {
 
 function openLogin() { document.getElementById('login-modal').classList.remove('hidden'); }
 function closeLogin() { document.getElementById('login-modal').classList.add('hidden'); }
+
 function loginUser() {
     const username = document.getElementById('login-username').value.trim();
-    if(username.length < 3) { showToast("Kullanıcı adı en az 3 harf olmalı!"); return; }
+    const pass = document.getElementById('login-password').value.trim();
+    
+    if(username.length < 3 || pass.length < 4) { 
+        showToast("Hata: Kullanıcı adı en az 3, şifre en az 4 haneli olmalı!"); 
+        return; 
+    }
+    
     currentUser = username;
     localStorage.setItem('darkpin_user', currentUser);
     closeLogin();
     updateAuthUI();
     showToast(`Hoş geldin, ${currentUser}!`);
-    // Çarkı göstermeyi dene
-    if(!localStorage.getItem('darkpin_spun')) { setTimeout(() => { document.getElementById('wheel-modal').classList.remove('hidden'); }, 1000); }
+    
+    // Giriş yapınca çarkı göster
+    if(!localStorage.getItem('darkpin_spun')) { 
+        setTimeout(() => { document.getElementById('wheel-modal').classList.remove('hidden'); }, 1000); 
+    }
 }
+
 function logoutUser() {
     currentUser = null;
     localStorage.removeItem('darkpin_user');
     cart = []; orders = [];
     updateAuthUI();
-    showToast("Çıkış yapıldı.");
+    showToast("Hesaptan güvenle çıkış yapıldı.");
 }
 
 function toggleTheme() {
@@ -124,19 +132,14 @@ function displayProducts(products) {
     });
 }
 
-// 4. ÖZELLİK: GİZLİ OYUN YÖNLENDİRMESİ (EASTER EGG - LOST CAMP)
+// GİZLİ OYUN YÖNLENDİRMESİ
 function searchProducts(keyword) {
     const searchTerm = keyword.trim().toUpperCase();
     
-    // GİZLİ ŞİFRE BURADA KONTROL EDİLİYOR
     if(searchTerm === 'DARKGAME') {
-        document.getElementById('searchInput').value = ""; // Kutuyu temizle
+        document.getElementById('searchInput').value = ""; 
         showToast("Gizli portal açılıyor... Lost Camp'a Hoş Geldin!");
-        
-        // SENİN OYUNUNUN LİNKİ EKLENDİ
-        setTimeout(() => {
-            window.open('https://huseyin09020.github.io/Lost-Camp/', '_blank'); 
-        }, 1500);
+        setTimeout(() => { window.open('https://huseyin09020.github.io/Lost-Camp/', '_blank'); }, 1500);
         return;
     }
 
